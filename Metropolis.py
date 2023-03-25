@@ -51,13 +51,19 @@ class Metropolis:
         block_n = len(blockLengths)
         r_target = 0.4
         stepSize = 1
-        
+        accept_num = 0
+        total_num = 0
         
         for i in range(block_n):
             
             for j in range(blockLengths[i]):
                 proposal = np.random.normal(self.currentState, stepSize)
-                accept_rate = self.r_rate(proposal)
+                total_num += 1
+                p_acceptance = self.r_rate(proposal)
+                if random.uniform(0, 1) < math.exp(p_acceptance):
+                    accept_num +=1
+                
+                accept_rate = accept_num / total_num
                 
                 stepSize = stepSize * math.pow(( accept_rate / r_target), 1.1)
             
